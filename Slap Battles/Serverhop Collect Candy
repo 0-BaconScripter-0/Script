@@ -14,11 +14,15 @@ if game.PlaceId == 6403373529 or game.PlaceId == 9015014224 or game.PlaceId == 1
         end
     end
     task.wait(1)
-    for _, v in pairs(game.Workspace.CandyCorns:GetChildren()) do
-        pcall(function()   
-            v.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame
-        end)
-    end    
+    for i = 1, 10 do
+        for _, v in pairs(game.Workspace.CandyCorns:GetChildren()) do
+            pcall(function()   
+                v.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame
+            end)
+        end    
+        task.wait()
+    end
+    task.wait(1)
     httprequest = (syn and syn.request) or (http and http.request) or http_request or (fluxus and fluxus.request) or request
     local function SHOP()
         if httprequest then
