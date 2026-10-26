@@ -1,1 +1,49 @@
-
+if not game:IsLoaded() then
+    game.Loaded:Wait()
+end
+if game.PlaceId == 6403373529 or game.PlaceId == 9015014224 or game.PlaceId == 11520107397 or game.PlaceId == 124596094333302 then
+    for _, v in pairs(game:GetService("Players").LocalPlayer.PlayerGui:GetChildren()) do
+        local loading = v.Name == "Component" and v:FindFirstChild("LoadingIndicator")
+        if loading then
+            if loading.Visible then
+                repeat task.wait() until not loading.Visible
+                print("game loaded")
+            else
+                print("game already loaded")
+            end
+        end
+    end
+    task.wait(1)
+    for _, v in pairs(game.Workspace.CandyCorns:GetChildren()) do
+        pcall(function()   
+            v.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame
+        end)
+    end    
+    httprequest = (syn and syn.request) or (http and http.request) or http_request or (fluxus and fluxus.request) or request
+    local function SHOP()
+        if httprequest then
+            local servers = {}
+            local req = httprequest({Url = string.format("https://games.roblox.com/v1/games/%d/servers/Public?sortOrder=Desc&limit=100&excludeFullGames=true", game.PlaceId)})
+            local body = game:GetService("HttpService"):JSONDecode(req.Body)
+            
+            if body and body.data then
+                for i, v in next, body.data do
+                    if type(v) == "table" and tonumber(v.playing) and tonumber(v.maxPlayers) and v.playing < v.maxPlayers and v.id ~= game.JobId then
+                        table.insert(servers, 1, v.id)
+                    end
+                end
+            end
+            
+            if #servers > 0 then
+                game:GetService("TeleportService"):TeleportToPlaceInstance(game.PlaceId, servers[math.random(1, #servers)], game.Players.LocalPlayer)
+            else
+                game:GetService("TeleportService"):Teleport(game.PlaceId)
+            end
+        end
+    end
+    while wait() do
+        SHOP()
+    end
+else
+    game.StarterGui:SetCore("SendNotification", {Title = "Error with the script!", Duration = 5, Text = "does not support this gane", Icon = "rbxassetid://16678850189" })    
+end
